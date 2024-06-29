@@ -1,4 +1,10 @@
-const PORT=process.env.PORT||8900;
+const PORT=process.env.PORT|| 8900;
+const express=require('express')
+const app=express()
+const cors =require('cors')
+app.use(cors())
+app.get('/',(req,res)=>res.send('Socket is live'))
+const server=require('http').createServer(app)
 const io=require('socket.io')(PORT,{
     cors:{
         origin:'*'
@@ -18,9 +24,7 @@ const getUsers=(userId)=>{
       return users.find((user)=>user.userId==userId)
 }
 io.on('connection',(socket)=>{
-    console.log('user-connected')
     socket.on('addUsers',(userId)=>{
-        
         addUsers(userId,socket.id)
         io.emit('getUsers',users)
     })
@@ -39,3 +43,5 @@ io.on('connection',(socket)=>{
         io.emit('getUsers',users)
     })
 })
+
+// server.listen(PORT,()=>console.log(`Socket server is live on ${PORT}`))
